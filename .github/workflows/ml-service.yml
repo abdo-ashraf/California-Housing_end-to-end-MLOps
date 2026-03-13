@@ -9,6 +9,7 @@ on:
     branches: [main]
     paths:
       - "app/ml_service/**"
+  workflow_dispatch:
 
 jobs:
 
@@ -24,7 +25,7 @@ jobs:
       - name: Verify required files exist
         run: |
           cd app/ml_service
-          
+
           required_files=("app.py" "Dockerfile" "requirements.txt")
 
           for file in "${required_files[@]}"; do
