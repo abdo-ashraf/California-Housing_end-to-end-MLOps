@@ -61,6 +61,10 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+      
+      - name: Change to ml_service directory
+        run: |
+          cd app/ml_service
 
       - name: Install Git LFS
         run: |
