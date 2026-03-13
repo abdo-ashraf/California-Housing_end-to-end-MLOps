@@ -23,6 +23,8 @@ jobs:
 
       - name: Verify required files exist
         run: |
+          cd app/ml_service
+          
           required_files=("app.py" "Dockerfile" "requirements.txt")
 
           for file in "${required_files[@]}"; do
@@ -45,7 +47,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build Docker Image
-        run: docker build -t my-app .
+        run: |
+          cd app/ml_service
+          docker build -t ml-service .
 
 
   deploy:
