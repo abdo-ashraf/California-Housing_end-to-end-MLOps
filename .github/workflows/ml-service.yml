@@ -12,9 +12,33 @@ on:
 
 jobs:
 
+  review:
+    name: Check Required Files
+    runs-on: ubuntu-latest
+    
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Verify required files exist
+        run: |
+          required_files=("app.py" "Dockerfile" "requirements.txt")
+
+          for file in "${required_files[@]}"; do
+            if [ ! -f "$file" ]; then
+              echo "Missing required file: $file"
+              exit 1
+            else
+              echo "Found $file"
+            fi
+          done
+
+
   build:
     name: Build Docker Image
     runs-on: ubuntu-latest
+    needs: review
 
     steps:
       - name: Checkout repo
@@ -22,6 +46,7 @@ jobs:
 
       - name: Build Docker Image
         run: docker build -t my-app .
+
 
   deploy:
     name: Push to HuggingFace Space
@@ -40,8 +65,10 @@ jobs:
       - name: Clone HuggingFace Space
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_USERNAME: ${{ secrets.HF_USERNAME }}
+          HF_SPACE_NAME: ${{ secrets.HF_SPACE_NAME }}
         run: |
-          git clone https://user:$HF_TOKEN@huggingface.co/spaces/USERNAME/SPACE_NAME space
+          git clone https://user:$HF_TOKEN@huggingface.co/spaces/$HF_USERNAME/$HF_SPACE_NAME space
 
       - name: Copy project files
         run: |
