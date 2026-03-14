@@ -9,7 +9,7 @@ on:
     branches: [main]
     paths:
       - "app/server/**"
-    workflow_dispatch:
+  workflow_dispatch:
 
 jobs:
 
