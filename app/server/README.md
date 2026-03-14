@@ -1,47 +1,20 @@
-# Frontend (Streamlit)
+---
+title: HousingModel Server
+emoji: 🚀
+colorFrom: red
+colorTo: red
+sdk: docker
+app_port: 8501
+tags:
+- streamlit
+pinned: false
+short_description: Streamlit template space
+license: mit
+---
 
-Modern Streamlit frontend for the Housing Price Predictor backend.
+# Welcome to Streamlit!
 
-## Setup
+Edit `/src/streamlit_app.py` to customize this app to your heart's desire. :heart:
 
-```bash
-cd app/server
-pip install -r requirements.txt
-```
-
-## Run
-
-```bash
-streamlit run app.py
-```
-
-Frontend runs on `http://localhost:8501`
-
-## Environment Variables
-
-Set the backend API URL (optional). `BACKEND_URL` is checked first, then `API_BASE_URL`:
-
-```bash
-BACKEND_URL=http://localhost:8000 streamlit run app.py
-```
-
-Defaults to `http://localhost:8000` if not set.
-
-## Features
-
-- ✨ Single housing record prediction
-- 📊 Batch predictions with JSON input
-- 🔄 Model reload capability
-- 📈 Summary statistics for batch results
-- 🧾 Model metadata display (name, alias, version)
-- 🎨 Clean, modern Streamlit UI
-- ⚡ Real-time API status checks
-- 🧠 Session state management
-
-## API Routes Used
-
-- `GET /health` - Health check and model state
-- `GET /model_info` - Loaded model metadata
-- `POST /predict` - Single prediction
-- `POST /predict_batch` - Batch predictions (`{"data": [HousingRecord, ...]}`)
-- `POST /reload_model` - Reload MLflow model
+If you have any questions, checkout our [documentation](https://docs.streamlit.io) and [community
+forums](https://discuss.streamlit.io).
