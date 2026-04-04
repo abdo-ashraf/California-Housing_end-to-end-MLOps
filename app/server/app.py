@@ -40,19 +40,36 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# Styling
 st.markdown("""
 <style>
     /* Improve spacing */
-    .main {
-        padding-top: 2rem;
+    .block-container {
+        padding-top: 0rem !important;
+        margin-top: 0rem !important;
     }
 
-    /* Make metric cards theme-aware */
+    /* Metric container (card style) */
     div[data-testid="metric-container"] {
         background-color: var(--secondary-background-color);
         border-radius: 0.5rem;
-        padding: 1rem;
+        padding: 0.6rem 0.8rem;
+    }
+
+    /* Metric label (title) */
+    div[data-testid="stMetricLabel"] > div {
+        font-size: 12px !important;
+        opacity: 0.8;
+    }
+
+    /* Metric value */
+    div[data-testid="stMetricValue"] > div {
+        font-size: 20px !important;
+        font-weight: 600;
+    }
+
+    /* Metric delta (optional) */
+    div[data-testid="stMetricDelta"] > div {
+        font-size: 12px !important;
     }
 
     /* Success box */
@@ -77,7 +94,6 @@ st.markdown("""
     h1, h2, h3 {
         color: inherit;
     }
-
 </style>
 """, unsafe_allow_html=True)
 
@@ -102,6 +118,7 @@ def make_api_call(
     endpoint: str,
     method: str = "GET",
     data: Optional[Dict[str, Any]] = None,
+    timeout_seconds: int = 10,
 ) -> Tuple[bool, Any]:
     """Make API call and return (success, parsed_response_or_error)."""
     try:
@@ -114,7 +131,7 @@ def make_api_call(
 
         request_kwargs: Dict[str, Any] = {
             "headers": headers,
-            "timeout": 10,
+            "timeout": timeout_seconds,
             "allow_redirects": False,
         }
         if normalized_method != "GET":
@@ -133,7 +150,7 @@ def make_api_call(
             redirect_method = normalized_method
             redirect_kwargs: Dict[str, Any] = {
                 "headers": headers,
-                "timeout": 10,
+                "timeout": timeout_seconds,
                 "allow_redirects": False,
             }
 
@@ -184,8 +201,6 @@ def refresh_api_state(show_messages: bool = True):
 
         if show_messages:
             st.success("API is reachable.")
-            st.info(f"Status: {st.session_state.api_status}")
-            st.info(f"Model Loaded: {st.session_state.model_loaded}")
     else:
         st.session_state.api_status = "error"
         st.session_state.model_loaded = False
@@ -270,26 +285,36 @@ with st.sidebar:
     st.header("API Controls")
 
     # Health Check
-    if st.button("🔍 Check API Health", use_container_width=True):
+    if st.button("🔍 Check API Health", width="stretch"):
         refresh_api_state(show_messages=True)
 
     # Reload Model
-    if st.button("🔄 Reload Model", use_container_width=True):
-        success, response = make_api_call(RELOAD_ENDPOINT, method="POST")
+    if st.button("🔄 Reload Model", width="stretch"):
+        success, response = make_api_call(
+            RELOAD_ENDPOINT,
+            method="POST",
+            timeout_seconds=60,
+        )
         if success:
             st.success(f"{response.get('message')}")
             refresh_api_state(show_messages=False)
         else:
             st.session_state.model_loaded = False
+            st.session_state.api_status = "unknown"
+            st.session_state.model_name = "unknown"
+            st.session_state.model_alias = "unknown"
+            st.session_state.model_version = None
             st.error(f"Error: {response}")
 
     st.divider()
 
     # Status Display
-    st.metric("API Status", str(st.session_state.api_status).upper())
-    st.metric("Model Loaded", "Yes" if st.session_state.model_loaded else "No")
+    status_col, loaded_col = st.columns(2)
+    with status_col:
+        st.metric("API Status", str(st.session_state.api_status).upper())
+    with loaded_col:
+        st.metric("Model Loaded", "Yes" if st.session_state.model_loaded else "No")
     st.caption(f"Model: {st.session_state.model_name}")
-    st.caption(f"Alias: {st.session_state.model_alias}")
     st.caption(f"Version: {st.session_state.model_version or 'unknown'}")
 
     st.divider()
@@ -321,7 +346,7 @@ with tab1:
         )
     
     # Prediction Request
-    if st.button("Predict Price", key="single_predict", use_container_width=True):
+    if st.button("Predict Price", key="single_predict", width="stretch"):
         if not st.session_state.model_loaded:
             st.warning("Model is not loaded. Please reload the model first.")
         else:
@@ -394,7 +419,7 @@ with tab2:
         help="Each object must have all required fields"
     )
 
-    if st.button("Predict Batch", key="batch_predict", use_container_width=True):
+    if st.button("Predict Batch", key="batch_predict", width="stretch"):
         if not st.session_state.model_loaded:
             st.warning("Model is not loaded. Please reload the model first.")
         else:
@@ -451,7 +476,7 @@ with tab2:
                                     "Record #": range(1, len(predictions) + 1),
                                     "Predicted Price": [f"${p:,.2f}" for p in predictions],
                                 },
-                                use_container_width=True,
+                                width="stretch",
                             )
                     else:
                         st.markdown(f"""
