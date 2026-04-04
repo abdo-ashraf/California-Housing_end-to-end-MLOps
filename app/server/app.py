@@ -137,8 +137,9 @@ def make_api_call(
                 "allow_redirects": False,
             }
 
-            # Browsers and many clients switch to GET for 301/302/303 after POST.
-            if response.status_code in {301, 302, 303} and normalized_method == "POST":
+            # Preserve POST for 301/302/307/308 to support action endpoints like /reload_model.
+            # Only 303 should switch to GET by definition.
+            if response.status_code == 303 and normalized_method == "POST":
                 redirect_method = "GET"
             elif normalized_method != "GET":
                 redirect_kwargs["json"] = data
