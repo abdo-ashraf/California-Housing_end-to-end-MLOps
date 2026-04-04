@@ -254,9 +254,10 @@ def _render_homepage_html(meta: dict) -> str:
             border-radius: 14px;
             padding: 14px;
             box-shadow: 0 4px 12px rgba(32, 45, 65, 0.06);
+            color: var(--ink);
         }}
         .label {{ font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }}
-        .value {{ margin-top: 6px; font-size: 1.05rem; font-weight: 600; word-break: break-word; }}
+        .value {{ margin-top: 6px; font-size: 1.05rem; font-weight: 600; word-break: break-word; color: var(--ink); }}
         .status.up {{ color: var(--up); }}
         .status.down {{ color: var(--down); }}
         .links {{ margin-top: 16px; display: flex; gap: 12px; flex-wrap: wrap; }}
