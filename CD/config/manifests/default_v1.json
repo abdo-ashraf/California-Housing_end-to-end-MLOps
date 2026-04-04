@@ -1,0 +1,61 @@
+{
+  "manifest_version": "1.0",
+  "run_name": "cd_train_evaluate_promote",
+  "stage": "prod",
+  "model_name": "HousingModel",
+  
+  "dataset": {
+    "component": "local_csv",
+    "version": "v1",
+    "config": {
+      "path": "assets/data/housing/housing.csv"
+    }
+  },
+  "tracker": {
+    "component": "mlflow_experiment",
+    "version": "v1",
+    "config": {
+      "experiment_name": "california_housing_experiment"
+    }
+  },
+  "splitter": {
+    "component": "income_stratified_split",
+    "version": "v1",
+    "config": {
+      "test_size": 0.2,
+      "random_state": 42
+    }
+  },
+  "preprocessing": {
+    "component": "housing_preprocessing",
+    "version": "v1",
+    "config": {
+      "geo_n_clusters": 15,
+      "geo_gamma": 1.0
+    }
+  },
+  "trainer": {
+    "component": "random_forest_pipeline",
+    "version": "v1",
+    "config": {
+      "random_state": 42,
+      "max_features": 6
+    }
+  },
+  "evaluation": {
+    "component": "mlflow_model_eval_register",
+    "version": "v1",
+    "config": {
+      "confidence": 0.95
+    }
+  },
+  "promotion": {
+    "component": "champion_rmse_policy",
+    "version": "v1",
+    "config": {
+      "metric_name": "test_rmse",
+      "lower_is_better": true,
+      "champion_alias": "champion"
+    }
+  }
+}
