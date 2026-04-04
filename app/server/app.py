@@ -44,7 +44,7 @@ st.markdown("""
 <style>
     /* Improve spacing */
     .block-container {
-        padding-top: 0rem !important;
+        padding-top: 2rem !important;
         margin-top: 0rem !important;
     }
 
