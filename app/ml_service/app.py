@@ -8,6 +8,9 @@ from contextlib import asynccontextmanager
 import mlflow
 import mlflow.pyfunc
 import pandas as pd
+from dotenv import find_dotenv, load_dotenv
+
+load_dotenv(find_dotenv(), override=False)
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.routing import APIRoute
 from fastapi.middleware.cors import CORSMiddleware
