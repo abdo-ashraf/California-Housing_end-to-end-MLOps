@@ -9,6 +9,7 @@ import mlflow
 import mlflow.pyfunc
 import pandas as pd
 from fastapi import FastAPI, HTTPException, Request
+from fastapi.routing import APIRoute
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
@@ -171,6 +172,26 @@ def ensure_model_loaded():
 # ==============================
 # Endpoints
 # ==============================
+
+@app.get("/")
+def root():
+    """
+    Root endpoint for quick API discovery.
+    """
+    return {
+        "service": "Housing Price Prediction API",
+        "status": "ok",
+        "model_loaded": model_loaded,
+        "model_name": MODEL_NAME,
+        "model_version": model_version,
+        "docs_url": "/docs",
+        "redoc_url": "/redoc",
+        "endpoints": [
+            route.path
+            for route in app.routes
+            if isinstance(route, APIRoute)
+        ]
+    }
 
 @app.get("/health")
 def health():
