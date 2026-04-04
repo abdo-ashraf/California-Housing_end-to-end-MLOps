@@ -219,12 +219,12 @@ def _render_homepage_html(meta: dict) -> str:
     <title>{meta['service']}</title>
     <style>
         :root {{
-            --bg1: #f4f6fb;
-            --bg2: #e7ecf7;
-            --ink: #1f2a37;
-            --muted: #5b6575;
-            --card: #ffffff;
-            --line: #d7deea;
+            --bg1: #0E1117;
+            --bg2: #151a22;
+            --ink: #e6edf5;
+            --muted: #9aa6b5;
+            --card: #1b2230;
+            --line: #2a3444;
             --accent: #0f766e;
             --up: #1d7a47;
             --down: #b42318;
@@ -234,7 +234,7 @@ def _render_homepage_html(meta: dict) -> str:
             margin: 0;
             font-family: "Segoe UI", "Noto Sans", sans-serif;
             color: var(--ink);
-            background: radial-gradient(circle at 10% 10%, var(--bg2), var(--bg1) 40%);
+            background: var(--bg1);
             min-height: 100vh;
         }}
         .wrap {{ max-width: 960px; margin: 0 auto; padding: 28px 20px 40px; }}
@@ -263,9 +263,9 @@ def _render_homepage_html(meta: dict) -> str:
         .links {{ margin-top: 16px; display: flex; gap: 12px; flex-wrap: wrap; }}
         .btn {{
             text-decoration: none;
-            color: #083b5c;
-            background: #d9f3ff;
-            border: 1px solid #b9e6fb;
+            color: #d6eeff;
+            background: #1d3d5a;
+            border: 1px solid #315a80;
             border-radius: 999px;
             padding: 8px 14px;
             font-weight: 600;
@@ -273,7 +273,7 @@ def _render_homepage_html(meta: dict) -> str:
         .panel {{ margin-top: 18px; }}
         ul {{ list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }}
         li {{
-            background: #fff;
+            background: #171e2b;
             border: 1px solid var(--line);
             border-radius: 12px;
             padding: 10px 12px;
@@ -285,14 +285,14 @@ def _render_homepage_html(meta: dict) -> str:
         }}
         .method {{
             font-size: 0.72rem;
-            color: #0b5cab;
-            border: 1px solid #bcd8f5;
-            background: #eaf4ff;
+            color: #8bc6ff;
+            border: 1px solid #2f4f6f;
+            background: #17304a;
             border-radius: 6px;
             padding: 2px 8px;
             font-weight: 700;
         }}
-        a {{ color: #0d4a85; text-decoration: none; font-weight: 600; }}
+        a {{ color: #8fc7ff; text-decoration: none; font-weight: 600; }}
         @media (max-width: 680px) {{
             .hero {{ padding: 18px; }}
             h1 {{ font-size: 1.35rem; }}
