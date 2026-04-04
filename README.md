@@ -679,10 +679,6 @@ Best practices:
 - Update manifest examples when adding new component versions
 - All component functions must match the same signature (kwargs only)
 
-## License
-
-See LICENSE file (if present).
-
 ## Contact
 
 For questions, open an issue in the repository.
