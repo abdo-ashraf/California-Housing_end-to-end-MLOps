@@ -84,14 +84,18 @@ st.markdown("""
 
 # API Helper Functions
 def extract_error_message(response: requests.Response) -> str:
-    """Safely extract a readable error message from API responses."""
+    """Safely extract a readable error message from API responses without exposing infrastructure."""
     try:
         payload = response.json()
         if isinstance(payload, dict):
-            return str(payload.get("detail") or payload.get("message") or payload)
-        return str(payload)
+            detail = payload.get("detail") or payload.get("message")
+            if detail:
+                return str(detail)
+        # If no useful message, return generic HTTP error
+        return f"API request failed with status {response.status_code}"
     except ValueError:
-        return response.text or f"HTTP {response.status_code}"
+        # Don't expose raw response text which might contain infrastructure details
+        return f"API request failed with status {response.status_code}"
 
 
 def make_api_call(
@@ -119,21 +123,18 @@ def make_api_call(
 
         response = requests.request(normalized_method, url, **request_kwargs)
 
-        if response.status_code in {301, 302, 303, 307, 308}:
-            redirect_target = response.headers.get("Location")
-            if not redirect_target:
-                return False, "Received redirect without Location header"
-
-            redirect_url = urljoin(url, redirect_target)
-            response = requests.request(normalized_method, redirect_url, **request_kwargs)
-
         if response.status_code in [200, 201]:
             return True, response.json()
         return False, extract_error_message(response)
     except requests.exceptions.ConnectionError:
-        return False, f"Cannot connect to backend at {BACKEND_URL}"
+        return False, "Cannot connect to backend. Please check the API service."
+    except requests.exceptions.Timeout:
+        return False, "Backend service is not responding. Please try again later."
+    except requests.exceptions.RequestException:
+        return False, "Failed to reach backend. Please check your network and API settings."
     except Exception as e:
-        return False, str(e)
+        # Log the error but return a generic message to avoid leaking stack traces
+        return False, "An error occurred while processing your request."
 
 
 def refresh_api_state(show_messages: bool = True):
@@ -177,7 +178,13 @@ def validate_and_prepare_batch_records(records: Any) -> Tuple[bool, str, List[Di
     if not isinstance(records, list):
         return False, "Input must be a JSON array", []
 
+    if len(records) == 0:
+        return False, "Input array cannot be empty", []
+
     prepared_records: List[Dict[str, Any]] = []
+    numeric_fields = {"longitude", "latitude", "housing_median_age", "total_rooms", 
+                      "total_bedrooms", "population", "households", "median_income"}
+    string_fields = {"ocean_proximity"}
 
     for index, record in enumerate(records, start=1):
         if not isinstance(record, dict):
@@ -191,6 +198,18 @@ def validate_and_prepare_batch_records(records: Any) -> Tuple[bool, str, List[Di
                 [],
             )
 
+        # Type validation
+        for field in numeric_fields:
+            if field in record:
+                try:
+                    float(record[field])
+                except (ValueError, TypeError):
+                    return False, f"Record #{index}: '{field}' must be a number", []
+
+        for field in string_fields:
+            if field in record and not isinstance(record[field], str):
+                return False, f"Record #{index}: '{field}' must be text", []
+
         prepared_records.append({field: record[field] for field in FEATURE_FIELDS})
 
     return True, "", prepared_records
@@ -200,6 +219,12 @@ def validate_and_prepare_batch_records(records: Any) -> Tuple[bool, str, List[Di
 if "health_checked" not in st.session_state:
     refresh_api_state(show_messages=False)
     st.session_state.health_checked = True
+    # Show warning if backend is unreachable on startup
+    if st.session_state.api_status == "error":
+        st.warning(
+            "Could not connect to backend on startup. "
+            "Click 'Check API Health' in the sidebar to retry."
+        )
 
 if "model_loaded" not in st.session_state:
     st.session_state.model_loaded = False
@@ -245,7 +270,6 @@ with st.sidebar:
     st.caption(f"Version: {st.session_state.model_version or 'unknown'}")
 
     st.divider()
-    st.caption(f"Backend: {BACKEND_URL}")
 
 # Main Content
 tab1, tab2 = st.tabs(["Single Prediction", "Batch Prediction"])
