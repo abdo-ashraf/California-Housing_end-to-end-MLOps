@@ -115,13 +115,35 @@ def make_api_call(
         request_kwargs: Dict[str, Any] = {
             "headers": headers,
             "timeout": 10,
-            # Preserve HTTP method when handling redirects ourselves.
             "allow_redirects": False,
         }
         if normalized_method != "GET":
             request_kwargs["json"] = data
 
         response = requests.request(normalized_method, url, **request_kwargs)
+
+        # Some deployments redirect (e.g., HTTP -> HTTPS or canonical host).
+        # Follow one redirect while preserving method semantics.
+        if response.status_code in {301, 302, 303, 307, 308}:
+            redirect_target = response.headers.get("Location")
+            if not redirect_target:
+                return False, "Backend redirected without a valid target."
+
+            redirect_url = urljoin(url, redirect_target)
+            redirect_method = normalized_method
+            redirect_kwargs: Dict[str, Any] = {
+                "headers": headers,
+                "timeout": 10,
+                "allow_redirects": False,
+            }
+
+            # Browsers and many clients switch to GET for 301/302/303 after POST.
+            if response.status_code in {301, 302, 303} and normalized_method == "POST":
+                redirect_method = "GET"
+            elif normalized_method != "GET":
+                redirect_kwargs["json"] = data
+
+            response = requests.request(redirect_method, redirect_url, **redirect_kwargs)
 
         if response.status_code in [200, 201]:
             return True, response.json()
@@ -132,8 +154,8 @@ def make_api_call(
         return False, "Backend service is not responding. Please try again later."
     except requests.exceptions.RequestException:
         return False, "Failed to reach backend. Please check your network and API settings."
-    except Exception as e:
-        # Log the error but return a generic message to avoid leaking stack traces
+    except Exception:
+        # Return a generic message to avoid leaking stack traces.
         return False, "An error occurred while processing your request."
 
 
