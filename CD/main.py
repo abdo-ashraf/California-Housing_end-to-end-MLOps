@@ -61,7 +61,7 @@ def main():
         stage=stage,
         config=manifest.tracker["config"],
     )
-    print("MLflow tracking initialized successfully.", tracking_uri, experiment_name, stage)
+    print("MLflow tracking initialized successfully.", tracking_uri, experiment_name)
 
     dataset_resolver = resolve_dataset_component(
         manifest.dataset["component"],
@@ -115,7 +115,7 @@ def main():
 
     X_housing_test, y_housing_test = test_set.drop("median_house_value", axis=1), test_set["median_house_value"]
 
-    with mlflow.start_run(run_name=manifest.run_name):
+    with mlflow.start_run():
         mlflow.log_param("dataset_path", str(csv_path))
         mlflow.log_param("model_name", model_name)
         mlflow.log_param("stage", stage)

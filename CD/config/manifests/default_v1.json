@@ -1,14 +1,13 @@
 {
   "manifest_version": "1.0",
-  "run_name": "cd_train_evaluate_promote",
   "stage": "prod",
   "model_name": "HousingModel",
-  
+
   "dataset": {
     "component": "local_csv",
     "version": "v1",
     "config": {
-      "path": "assets/data/housing/housing.csv"
+      "path": "CD/assets/data/housing/housing.csv"
     }
   },
   "tracker": {

@@ -151,7 +151,6 @@ File: `CD/config/manifests/default_v1.json`
 ```json
 {
   "manifest_version": "1.0",
-  "run_name": "cd_train_evaluate_promote",
   "stage": "prod",
   "model_name": "HousingModel",
   
@@ -328,7 +327,7 @@ After training, check MLflow UI:
 ```
 MLFLOW_TRACKING_URI
 ├── Experiment: california_housing_experiment_prod
-│   └── Run: cd_train_evaluate_promote
+│   └── Run: 
 │       ├── Parameters:
 │       │   ├── dataset_path: assets/data/housing/housing.csv
 │       │   ├── model_name: HousingModel

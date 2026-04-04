@@ -7,7 +7,6 @@ from typing import Any, Dict
 @dataclass
 class RunManifest:
     manifest_version: str
-    run_name: str
     stage: str
     model_name: str
     dataset: Dict[str, Any]
@@ -58,7 +57,6 @@ def load_run_manifest(manifest_path: Path) -> RunManifest:
 
     manifest = RunManifest(
         manifest_version=str(payload.get("manifest_version", "1.0")),
-        run_name=str(payload.get("run_name", "cd_train_evaluate_promote")),
         stage=str(payload.get("stage", "prod")),
         model_name=str(payload.get("model_name", "HousingModel")),
         dataset=sections["dataset"],
