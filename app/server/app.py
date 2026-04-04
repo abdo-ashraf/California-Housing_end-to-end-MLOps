@@ -5,6 +5,9 @@ from urllib.parse import urljoin
 
 import requests
 import streamlit as st
+from dotenv import find_dotenv, load_dotenv
+
+load_dotenv(find_dotenv(), override=False)
 
 # Configuration
 DEFAULT_BACKEND_URL = "http://localhost:8000"
