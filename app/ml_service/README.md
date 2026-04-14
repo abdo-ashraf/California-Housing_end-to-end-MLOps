@@ -175,6 +175,6 @@ docker run --rm -p 8000:8000 \
 
 ## Related Components
 
-- CD pipeline trains, evaluates, and promotes models to MLflow aliases
+- training_and_promotion pipeline trains, evaluates, and promotes models to MLflow aliases
 - Streamlit server consumes this API for interactive inference
 

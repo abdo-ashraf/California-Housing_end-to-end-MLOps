@@ -163,4 +163,4 @@ Implemented safeguards in `app.py`:
 ## Related Components
 
 - Backend inference API: `app/ml_service`
-- Training/promotion pipeline: `CD`
+- Training/promotion pipeline: `training_and_promotion`
