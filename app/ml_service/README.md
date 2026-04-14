@@ -98,13 +98,19 @@ Allowed ocean_proximity values:
 
 ## Configuration
 
-The service loads environment variables from the repository-level .env file automatically.
+For Docker Compose usage, this service reads variables from `app/app.env`.
+For standalone local Python runs, export variables in your shell before starting Uvicorn.
 
 Required:
 
 - MODEL_NAME
 - MODEL_PRODUCTION_ALIAS
 - MLFLOW_TRACKING_URI
+
+MLflow prerequisite:
+
+- The registry at `MLFLOW_TRACKING_URI` must already contain `MODEL_NAME@MODEL_PRODUCTION_ALIAS` (default: `HousingModel@champion`).
+- If that alias is missing, the service starts but reports `model_loaded=false` until a valid model is available.
 
 Optional:
 

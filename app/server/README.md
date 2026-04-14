@@ -55,7 +55,8 @@ If any endpoint is unavailable, the UI will show a safe, user-friendly error.
 
 ## Environment Configuration
 
-The app reads environment variables from the repository `.env` automatically.
+For Docker Compose usage, this service reads variables from `app/app.env`.
+For standalone local Python runs, export variables in your shell before starting Streamlit.
 
 Primary variables:
 
@@ -157,7 +158,7 @@ Implemented safeguards in `app.py`:
 
 - Do not expose internal backend URLs in UI
 - Do not display raw backend response bodies with sensitive content
-- Keep secrets in `.env`, not source files
+- Keep secrets in `app.env` or `.env`, not source files
 
 ## Related Components
 
