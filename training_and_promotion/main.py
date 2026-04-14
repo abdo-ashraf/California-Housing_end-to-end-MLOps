@@ -26,7 +26,7 @@ def resolve_project_root() -> Path:
 
 
 def resolve_manifest_path(project_root: Path) -> Path:
-    manifest_raw = os.getenv("CD_RUN_MANIFEST_PATH", "CD/config/manifests/default_v1.json")
+    manifest_raw = os.getenv("CD_RUN_MANIFEST_PATH", "training_and_promotion/config/manifests/default_v1.json")
     manifest_path = Path(manifest_raw)
     if not manifest_path.is_absolute():
         manifest_path = project_root / manifest_path
@@ -39,7 +39,7 @@ def main():
     manifest = load_run_manifest(manifest_path)
 
     # Resolve stage/model values with env taking precedence.
-    tracking_uri = os.getenv("MLFLOW_TRACKING_URI", "")
+    tracking_uri = os.getenv("MLFLOW_TRACKING_URI")
     stage_raw = os.getenv("MLFLOW_STAGE", manifest.stage)
     model_name = os.getenv("MODEL_NAME", manifest.model_name)
 

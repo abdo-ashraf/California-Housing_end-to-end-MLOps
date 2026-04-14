@@ -53,7 +53,7 @@ def evaluate_and_register_model(
     # Log & Register Model
     # -------------------------
     model_info = mlflow_sklearn.log_model(final_model, registered_model_name=model_name,
-            serialization_format="cloudpickle", code_paths=["CD/pipeline"])
+            serialization_format="cloudpickle", code_paths=["training_and_promotion/pipeline"])
 
     model_version = model_info.registered_model_version
     print(f"Registered Model Version: {model_version}")

@@ -7,7 +7,7 @@
     "component": "local_csv",
     "version": "v1",
     "config": {
-      "path": "CD/assets/data/housing/housing.csv"
+      "path": "training_and_promotion/assets/data/housing/housing.csv"
     }
   },
   "tracker": {
