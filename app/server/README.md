@@ -158,7 +158,7 @@ Implemented safeguards in `app.py`:
 
 - Do not expose internal backend URLs in UI
 - Do not display raw backend response bodies with sensitive content
-- Keep secrets in `app.env` or `.env`, not source files
+- Keep secrets in `app.env`, not source files
 
 ## Related Components
 

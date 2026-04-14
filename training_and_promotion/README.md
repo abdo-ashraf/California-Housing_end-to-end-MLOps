@@ -40,7 +40,7 @@ python -m pip install -r training_and_promotion/requirements.txt
 
 ## Environment Configuration
 
-The training_and_promotion pipeline auto-loads environment variables using `find_dotenv()`.
+The training_and_promotion pipeline auto-loads environment variables from `training_and_promotion/.env`.
 
 Recommended setup:
 
@@ -48,7 +48,7 @@ Recommended setup:
 Copy-Item training_and_promotion/.env.example training_and_promotion/.env
 ```
 
-If `training_and_promotion/.env` is not present, it falls back to the nearest parent `.env` (for example, repository root).
+If `training_and_promotion/.env` is not present, set variables in your shell before running the pipeline.
 
 Required:
 
@@ -136,8 +136,7 @@ For runtime values below, precedence is:
 
 1. Shell environment variables
 2. `training_and_promotion/.env`
-3. Parent `.env` (for example, repository root)
-4. Manifest defaults
+3. Manifest defaults
 
 Applies to:
 
@@ -177,7 +176,7 @@ Model registry behavior:
 ## Troubleshooting
 
 - `MLFLOW_TRACKING_URI must be set`:
-  - Set `MLFLOW_TRACKING_URI` in your shell or `.env`.
+  - Set `MLFLOW_TRACKING_URI` in your shell or `training_and_promotion/.env`.
 - Manifest errors:
   - Verify all required sections and fields exist in manifest JSON.
 - Unsupported component/version:

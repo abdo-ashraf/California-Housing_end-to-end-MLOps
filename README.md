@@ -29,13 +29,11 @@ Use the layer-specific READMEs for implementation details:
 
 ## Environment Files
 
-- Root `.env`: shared/project-level settings.
 - `training_and_promotion/.env`: training-layer settings (recommended for training runs).
 - `app/app.env`: app-layer settings used by Docker Compose.
 
 Start from templates:
 
-- `.env.example`
 - `training_and_promotion/.env.example`
 - `app/app.env.example`
 
