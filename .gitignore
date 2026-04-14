@@ -1,6 +1,7 @@
 test.py
 Untitled-1.ipynb
 scripts.cmd
+app/app.env
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
