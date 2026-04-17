@@ -16,7 +16,8 @@ The training_and_promotion layer is manifest-driven: component names and version
 
 ## Folder Structure
 
-- `main.py`: Pipeline orchestrator
+- `main.py`: Thin entrypoint (env + manifest + runtime config resolution)
+- `services/training_pipeline_service.py`: Training pipeline orchestration service
 - `components/component_registry.py`: Versioned component registry and resolver functions
 - `config/run_manifest.py`: Manifest loader and schema validation
 - `config/manifests/default_v1.json`: Default manifest

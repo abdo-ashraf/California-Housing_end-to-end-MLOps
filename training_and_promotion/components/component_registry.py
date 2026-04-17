@@ -14,7 +14,9 @@ ComponentKey = Tuple[str, str]
 ComponentFn = Callable[..., Any]
 
 
-def _require_component(registry: Dict[ComponentKey, ComponentFn], component: str, version: str) -> ComponentFn:
+def _get_component_from_registry(
+    registry: Dict[ComponentKey, ComponentFn], component: str, version: str
+) -> ComponentFn:
     key = (component, version)
     if key not in registry:
         available = ", ".join([f"{name}:{ver}" for name, ver in sorted(registry.keys())])
@@ -41,8 +43,12 @@ DATASET_COMPONENTS: Dict[ComponentKey, ComponentFn] = {
 }
 
 
+def get_dataset_component(component: str, version: str) -> ComponentFn:
+    return _get_component_from_registry(DATASET_COMPONENTS, component, version)
+
+
 def resolve_dataset_component(component: str, version: str) -> ComponentFn:
-    return _require_component(DATASET_COMPONENTS, component, version)
+    return get_dataset_component(component, version)
 
 
 # -------------------------
@@ -61,8 +67,12 @@ SPLITTER_COMPONENTS: Dict[ComponentKey, ComponentFn] = {
 }
 
 
+def get_splitter_component(component: str, version: str) -> ComponentFn:
+    return _get_component_from_registry(SPLITTER_COMPONENTS, component, version)
+
+
 def resolve_splitter_component(component: str, version: str) -> ComponentFn:
-    return _require_component(SPLITTER_COMPONENTS, component, version)
+    return get_splitter_component(component, version)
 
 
 # -------------------------
@@ -89,8 +99,12 @@ PREPROCESSING_COMPONENTS: Dict[ComponentKey, ComponentFn] = {
 }
 
 
+def get_preprocessing_component(component: str, version: str) -> ComponentFn:
+    return _get_component_from_registry(PREPROCESSING_COMPONENTS, component, version)
+
+
 def resolve_preprocessing_component(component: str, version: str) -> ComponentFn:
-    return _require_component(PREPROCESSING_COMPONENTS, component, version)
+    return get_preprocessing_component(component, version)
 
 
 # -------------------------
@@ -116,8 +130,12 @@ TRAINER_COMPONENTS: Dict[ComponentKey, ComponentFn] = {
 }
 
 
+def get_trainer_component(component: str, version: str) -> ComponentFn:
+    return _get_component_from_registry(TRAINER_COMPONENTS, component, version)
+
+
 def resolve_trainer_component(component: str, version: str) -> ComponentFn:
-    return _require_component(TRAINER_COMPONENTS, component, version)
+    return get_trainer_component(component, version)
 
 
 # -------------------------
@@ -139,8 +157,12 @@ EVALUATION_COMPONENTS: Dict[ComponentKey, ComponentFn] = {
 }
 
 
+def get_evaluation_component(component: str, version: str) -> ComponentFn:
+    return _get_component_from_registry(EVALUATION_COMPONENTS, component, version)
+
+
 def resolve_evaluation_component(component: str, version: str) -> ComponentFn:
-    return _require_component(EVALUATION_COMPONENTS, component, version)
+    return get_evaluation_component(component, version)
 
 
 # -------------------------
@@ -163,8 +185,12 @@ PROMOTION_COMPONENTS: Dict[ComponentKey, ComponentFn] = {
 }
 
 
+def get_promotion_component(component: str, version: str) -> ComponentFn:
+    return _get_component_from_registry(PROMOTION_COMPONENTS, component, version)
+
+
 def resolve_promotion_component(component: str, version: str) -> ComponentFn:
-    return _require_component(PROMOTION_COMPONENTS, component, version)
+    return get_promotion_component(component, version)
 
 
 # -------------------------
@@ -188,5 +214,9 @@ TRACKER_COMPONENTS: Dict[ComponentKey, ComponentFn] = {
 }
 
 
+def get_tracker_component(component: str, version: str) -> ComponentFn:
+    return _get_component_from_registry(TRACKER_COMPONENTS, component, version)
+
+
 def resolve_tracker_component(component: str, version: str) -> ComponentFn:
-    return _require_component(TRACKER_COMPONENTS, component, version)
+    return get_tracker_component(component, version)

@@ -1,0 +1,1 @@
+from .training_pipeline_service import run_training_pipeline

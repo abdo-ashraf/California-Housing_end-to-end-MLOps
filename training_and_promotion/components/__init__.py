@@ -1,4 +1,11 @@
 from .component_registry import (
+    get_dataset_component,
+    get_splitter_component,
+    get_preprocessing_component,
+    get_trainer_component,
+    get_evaluation_component,
+    get_promotion_component,
+    get_tracker_component,
     resolve_dataset_component,
     resolve_splitter_component,
     resolve_preprocessing_component,
