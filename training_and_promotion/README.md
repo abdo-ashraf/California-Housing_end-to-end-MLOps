@@ -163,7 +163,78 @@ Component behavior still comes from manifest `config` values.
 - Evaluation: `mlflow_model_eval_register:v1`
 - Promotion: `champion_rmse_policy:v1`
 
-To add a new version, implement it in `components/component_registry.py` and reference it from a new manifest.
+## Add A New Component Version
+
+Follow this workflow when adding a new version (for example, `trainer:v2`).
+
+1. Pick the component section to extend:
+   - `dataset`, `tracker`, `splitter`, `preprocessing`, `trainer`, `evaluation`, or `promotion`.
+2. Implement a new versioned function in `training_and_promotion/components/component_registry.py`.
+3. Register the new function in the matching `*_COMPONENTS` dictionary with a new key tuple.
+4. Create a new manifest JSON file (recommended) under `training_and_promotion/config/manifests/`.
+5. Point the run to that manifest and execute the pipeline.
+
+Example: add `trainer` version `v2`
+
+```python
+# training_and_promotion/components/component_registry.py
+def _random_forest_pipeline_v2(*, preprocessing, config: Dict[str, Any]):
+    max_features = config.get("max_features", 8)
+    random_state = int(config.get("random_state", 42))
+    n_estimators = int(config.get("n_estimators", 500))
+
+    model = make_pipeline(
+        preprocessing,
+        RandomForestRegressor(
+            random_state=random_state,
+            max_features=max_features,
+            n_estimators=n_estimators,
+        ),
+    )
+    return model
+
+
+TRAINER_COMPONENTS: Dict[ComponentKey, ComponentFn] = {
+    ("random_forest_pipeline", "v1"): _random_forest_pipeline_v1,
+    ("random_forest_pipeline", "v2"): _random_forest_pipeline_v2,
+}
+```
+
+Then create a manifest like `training_and_promotion/config/manifests/trainer_v2.json`:
+
+```json
+{
+  "trainer": {
+    "component": "random_forest_pipeline",
+    "version": "v2",
+    "config": {
+      "random_state": 42,
+      "max_features": 8,
+      "n_estimators": 500
+    }
+  }
+}
+```
+
+Run with the new manifest:
+
+```powershell
+$env:CD_RUN_MANIFEST_PATH = "training_and_promotion/config/manifests/trainer_v2.json"
+python training_and_promotion/main.py
+```
+
+Important notes:
+
+- Keep function signatures compatible with the section type:
+  - Dataset: `(*, config, project_root)`
+  - Tracker: `(*, tracking_uri, stage, config)`
+  - Splitter: `(*, data, config)`
+  - Preprocessing: `(*, config)`
+  - Trainer: `(*, preprocessing, config)`
+  - Evaluation: `(*, X_test, y_test, final_model, model_name, config)`
+  - Promotion: `(*, new_version, model_name, config)`
+- If you forget to register a new `(component, version)` pair, the pipeline raises an `Unsupported component` error with available options.
+- Prefer creating a new manifest file for each experiment version instead of modifying the default manifest in place.
 
 ## MLflow Outputs
 
