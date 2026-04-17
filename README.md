@@ -27,6 +27,29 @@ Use the layer-specific READMEs for implementation details:
 - Streamlit frontend guide: `app/server/README.md`
 - App-level Docker Compose guide: `app/README.md`
 
+## GitHub Workflows
+
+This repository currently uses three GitHub Actions workflows:
+
+1. Training and promotion workflow
+	- File: `.github/workflows/training-and-promotion.yml`
+	- Purpose: validate training configuration on PR/push and run full training on schedule/manual trigger.
+	- Triggers: push, pull_request, workflow_dispatch, schedule.
+	- Required secret for full training: `MLFLOW_TRACKING_URI`.
+	- Optional secrets: `MLFLOW_TRACKING_USERNAME`, `MLFLOW_TRACKING_PASSWORD`.
+
+2. ML service deployment workflow
+	- File: `.github/workflows/ml-service.yml`
+	- Purpose: verify, build, and deploy the FastAPI inference service to Hugging Face Space.
+	- Triggers: push, pull_request, workflow_dispatch for `app/ml_service/**` changes.
+	- Required secrets: `HF_TOKEN`, `HF_USERNAME`, `HF_SPACE_NAME`.
+
+3. Streamlit server deployment workflow
+	- File: `.github/workflows/server.yml`
+	- Purpose: verify, build, and deploy the Streamlit frontend to Hugging Face Space.
+	- Triggers: push, pull_request, workflow_dispatch for `app/server/**` changes.
+	- Required secrets: `HF_TOKEN`, `HF_USERNAME`, `HF_SERVER_SPACE_NAME`.
+
 ## Environment Files
 
 - `training_and_promotion/.env`: training-layer settings (recommended for training runs).
