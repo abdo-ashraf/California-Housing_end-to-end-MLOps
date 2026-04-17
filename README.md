@@ -39,6 +39,17 @@ Start from templates:
 
 ## Quick Start
 
+### 0. Setup Python Environment And Install Dependencies
+
+From repository root (PowerShell):
+
+```powershell
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -r training_and_promotion/requirements.txt
+```
+
 ### 1. Train and Promote a Model
 
 From repository root:

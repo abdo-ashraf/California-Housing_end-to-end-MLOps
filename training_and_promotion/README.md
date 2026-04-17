@@ -39,6 +39,12 @@ Install dependencies:
 python -m pip install -r training_and_promotion/requirements.txt
 ```
 
+If your current directory is `training_and_promotion/`, use:
+
+```sh
+python -m pip install -r requirements.txt
+```
+
 ## Environment Configuration
 
 The training_and_promotion pipeline auto-loads environment variables from `training_and_promotion/.env`.
